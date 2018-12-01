@@ -3,6 +3,7 @@ package com.brotuny.proj.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import com.brotuny.proj.storege.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,17 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/*
-import hello.storage.StorageFileNotFoundException;
-import hello.storage.StorageService;
+import com.brotuny.proj.exception.StorageFileNotFoundException;
 
 @Controller
 public class FileUploadController {
 
-    private final StorageService storageService;
+    private final FileSystemStorageService storageService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileUploadController(FileSystemStorageService storageService) {
         this.storageService = storageService;
     }
 
@@ -69,4 +68,4 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
-}*/
+}

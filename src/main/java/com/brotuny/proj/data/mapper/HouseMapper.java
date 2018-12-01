@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface HouseMapper {
-    @Insert("INSERT INTO houses (id, number, house_complex_id) VALUES (#{id}, #{number}, #{house_complex_id}")
+    @Insert("INSERT INTO houses (id, number, house_complex_id) VALUES (#{id}, #{number}, #{house_complex_id})")
     @SelectKey(statement = "SELECT nextVal('houses_id_seq')", keyProperty = "id", before = true, resultType = long.class)
     void insert(House house);
 

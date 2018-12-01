@@ -1,6 +1,8 @@
 package com.brotuny.proj.data.model;
 
-public abstract class BREntity {
+import java.io.Serializable;
+
+public abstract class BREntity implements Serializable {
 
     // @Getter@Setter
     protected long id;
