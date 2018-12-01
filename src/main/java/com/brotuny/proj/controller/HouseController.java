@@ -15,9 +15,9 @@ public class HouseController {
 
     @PostMapping
     @ResponseBody
-    public House create(@RequestBody House complex) {
-        House newComplex = houseService.createHouse(complex);
-        return newComplex;
+    public House create(@RequestBody House house) {
+        House newHouse = houseService.createHouse(house);
+        return newHouse;
     }
 
     @GetMapping

@@ -5,6 +5,7 @@ public class House extends BREntity {
     private long complexId;
 
     public House(long id, String number, long complexId) {
+        this.id = id;
         this.number = number;
         this.complexId = complexId;
     }
