@@ -17,18 +17,8 @@ public class EmailCreater {
     }
 
     public String createMail(Stage stage) {
-        String tmp = template.replaceAll("TITLETITLE", stage.getTitle());
-        byte[] bytes = fileSystemStorageService.load(stage.getPhoto());
-        if (bytes != null) {
-            String encodedFile = null;
-            try {
-                encodedFile = new String(Base64.encodeBase64(bytes), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            tmp = tmp.replaceAll("IMAGEIMAGE", "data:image/jpg;base64," + encodedFile);
-        }
-        return tmp;
+        return template.replace("TITLETITLE", stage.getTitle())
+                .replace("IMAGEIMAGE", "http://image.brotuny.mykinnetic.net/" + stage.getPhoto());
     }
 
 
@@ -48,7 +38,7 @@ public class EmailCreater {
             "\t\t      <div class=\"point_news_images\" style=\"overflow: hidden; margin-top: 15px;\">  \n" +
             "\n" +
             "                <div class=\"point_news_image\" style=\"float: left; width: 100%; background-size: cover;position: relative;\">\n" +
-            "\t                ТУТ БУДЕТ КАРТИНКА" +
+            "\t               <img style=\"width: 100%; display: block;\" class=\"point_news_image_center\" src=\"https://cdn.spbguru.ru/uploads/news/na-kakom-ehtape-stroitelystva-luchshe-pokupaty-zhilye_l.jpg\" alt=\"\">" +
             "\t              </div>\n" +
             "              </div>\n" +
             "\t\t      <div class=\"point_news_text\" style=\"margin-top: 15px;\n" +
