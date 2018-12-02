@@ -2,6 +2,8 @@ package com.brotuny.proj.service;
 
 import com.brotuny.proj.data.mapper.StageMapper;
 import com.brotuny.proj.data.model.Stage;
+import com.brotuny.proj.notifications.SmtpEmailSender;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -15,9 +17,11 @@ import java.util.List;
 public class StageService {
 
     private final StageMapper stageMapper;
+    private final SmtpEmailSender smtpEmailSender;
 
-    public StageService(StageMapper stageMapper) {
+    public StageService(StageMapper stageMapper, SmtpEmailSender smtpEmailSender) {
         this.stageMapper = stageMapper;
+        this.smtpEmailSender = smtpEmailSender;
     }
 
     public Stage findStageById(long id) {
@@ -52,12 +56,17 @@ public class StageService {
         actualyze(stage, oldStage);
         stage.setUpdated_at(new Timestamp(System.currentTimeMillis()));
         stageMapper.update(stage);
+
+        if (stage.getStatus() != oldStage.getStatus()) {
+            smtpEmailSender.sendEmail(stage);
+        }
+
         return stage;
     }
 
     public void update(Stage[] stages) {
         for (Stage stage : stages) {
-           update(stage);
+            update(stage);
         }
     }
 

@@ -1,102 +1,96 @@
 package com.brotuny.proj.storege;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
 
-import com.brotuny.proj.exception.StorageException;
-import com.brotuny.proj.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.UUID;
 
 @Service
 public class FileSystemStorageService {
-    private final Path rootLocation;
+    private final String rootLocation;
 
     @Autowired
     public FileSystemStorageService(/*StorageProperties properties*/) {
-        this.rootLocation = Paths.get("upload-dir");
+        this.rootLocation = "C:\\Repos\\images\\";
     }
 
-    public void store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    public String store(byte[] image) {
         try {
-            if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
-            }
-            if (filename.contains("..")) {
-                // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
-            }
-            try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
-                        StandardCopyOption.REPLACE_EXISTING);
-            }
+            String id = UUID.randomUUID().toString();
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
+            File outputfile = new File(rootLocation + id + ".jpg");
+            ImageIO.write(bufferedImage, "jpg", outputfile);
+            return id;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
-        }
+        return "";
     }
 
-    public Stream<Path> loadAll() {
+
+    public byte[] load(String id) {
         try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
-        }
-        catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
+            File initialFile = new File(rootLocation + id + ".jpg");
+            InputStream targetStream = new FileInputStream(initialFile);
+            BufferedImage img = ImageIO.read(targetStream);
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ImageIO.write(img, "jpg", bao);
+            return bao.toByteArray();
 
+        } catch (IOException e) {
+            System.console().printf(e.getStackTrace().toString());
+            throw new RuntimeException(e);
+        }
     }
 
 
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
-    }
-
-
+/*
     public Resource loadAsResource(String filename) {
         try {
             Path file = load(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
-            }
-            else {
+            } else {
                 throw new StorageFileNotFoundException(
                         "Could not read file: " + filename);
 
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
     }
+*/
 
 
+/*
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
+*/
 
 
-    public void init() {
+/*    public void init() {
         try {
             Files.createDirectories(rootLocation);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
+    }*/
+
+      /*  public Stream<Path> loadAll() {
+        try {
+            return Files.walk(this.rootLocation, 1)
+                    .filter(path -> !path.equals(this.rootLocation))
+                    .map(this.rootLocation::relativize);
+        } catch (IOException e) {
+            throw new StorageException("Failed to read stored files", e);
+        }
+
     }
+
+*/
 }

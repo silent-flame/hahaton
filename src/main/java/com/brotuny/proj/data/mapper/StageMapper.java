@@ -1,8 +1,8 @@
 package com.brotuny.proj.data.mapper;
 
 import com.brotuny.proj.data.model.Stage;
+import com.brotuny.proj.data.model.User;
 import org.apache.ibatis.annotations.*;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Mapper
 public interface StageMapper {
@@ -41,4 +41,15 @@ public interface StageMapper {
 
     @Delete("DELETE FROM stages WHERE id = #{id}")
     void delete(@Param("id") long id);
+
+
+    @Select("select " +
+            "    us.email, us.telegram " +
+            "from " +
+            "    users us, " +
+            "    stages st " +
+            "WHERE " +
+            "  st.id = #{id} " +
+            "  and us.house_id = st.house_id")
+    User[] getUsersByStage(@Param("id") long id);
 }
