@@ -17,7 +17,7 @@ public class VkBot {
 
   public VkBot() {
     group = new Group(botId, token);
-    group.onSimpleTextMessage(message -> {
+    group.onMessage(message -> {
               if (users().contains(message.authorId())) {
                 new Message()
                         .from(group)
@@ -46,5 +46,13 @@ public class VkBot {
     synchronized (users) {
       return new ArrayList<>(users);
     }
+  }
+
+  public void sendNotification(Integer subscriberId,String message){
+    new Message()
+            .from(group)
+            .to(subscriberId)
+            .text(message)
+            .send();
   }
 }
