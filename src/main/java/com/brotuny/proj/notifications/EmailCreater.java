@@ -19,14 +19,15 @@ public class EmailCreater {
     public String createMail(Stage stage) {
         String tmp = template.replaceAll("TITLETITLE", stage.getTitle());
         byte[] bytes = fileSystemStorageService.load(stage.getPhoto());
-        String encodedfile = null;
-        try {
-            encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (bytes != null) {
+            String encodedFile = null;
+            try {
+                encodedFile = new String(Base64.encodeBase64(bytes), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            tmp = tmp.replaceAll("IMAGEIMAGE", "data:image/jpg;base64," + encodedFile);
         }
-        tmp = tmp.replaceAll("IMAGEIMAGE", "data:image/jpg;base64," + encodedfile);
-        //template.replaceAll("","");
         return tmp;
     }
 

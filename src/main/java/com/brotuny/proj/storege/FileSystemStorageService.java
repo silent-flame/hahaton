@@ -34,6 +34,7 @@ public class FileSystemStorageService {
     public byte[] load(String id) {
         try {
             File initialFile = new File(rootLocation + id + ".jpg");
+            if (!initialFile.exists()) return null;
             InputStream targetStream = new FileInputStream(initialFile);
             BufferedImage img = ImageIO.read(targetStream);
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
