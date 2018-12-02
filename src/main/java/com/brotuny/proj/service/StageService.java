@@ -3,7 +3,6 @@ package com.brotuny.proj.service;
 import com.brotuny.proj.data.mapper.StageMapper;
 import com.brotuny.proj.data.model.Stage;
 import com.brotuny.proj.notifications.SmtpEmailSender;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -18,10 +17,12 @@ public class StageService {
 
     private final StageMapper stageMapper;
     private final SmtpEmailSender smtpEmailSender;
+    private final TimeService timeService;
 
-    public StageService(StageMapper stageMapper, SmtpEmailSender smtpEmailSender) {
+    public StageService(StageMapper stageMapper, SmtpEmailSender smtpEmailSender, TimeService timeService) {
         this.stageMapper = stageMapper;
         this.smtpEmailSender = smtpEmailSender;
+        this.timeService = timeService;
     }
 
     public Stage findStageById(long id) {
@@ -31,12 +32,8 @@ public class StageService {
     public Stage createStage(Stage stage) {
         if (findStageById(stage.getId()) != null)
             throw new IllegalArgumentException(String.format("Stage with id %s exists", stage.getId()));
-
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        stage.setCreated_at(now);
-        stage.setUpdated_at(now);
+        timeService.setTime(stage);
         stageMapper.insert(stage);
-
         return stage;
     }
 

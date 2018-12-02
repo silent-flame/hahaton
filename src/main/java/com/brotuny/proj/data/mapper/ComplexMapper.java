@@ -6,7 +6,8 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface ComplexMapper {
 
-    @Insert("INSERT INTO house_complexes (id, logo, name, address, developerId) VALUES (#{id}, #{logo}, #{name}, #{address}, #{developerId})")
+    @Insert("INSERT INTO house_complexes (id, logo, name, address, developer_Id, created_at, updated_at) " +
+            "VALUES (#{id}, #{logo}, #{name}, #{address}, #{developerId}, #{created_at}, #{updated_at})")
     @SelectKey(statement = "SELECT nextVal('house_complexes_id_seq')", keyProperty = "id", before = true, resultType = long.class)
     void insert(Complex complex);
 

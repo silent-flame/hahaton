@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 public class HouseService {
 
     private final HouseMapper househapper;
+    private final TimeService timeService;
 
-    public HouseService(HouseMapper househapper) {
+    public HouseService(HouseMapper househapper, TimeService timeService) {
         this.househapper = househapper;
+        this.timeService = timeService;
     }
 
     public House findHouseById(long id) {
@@ -20,6 +22,7 @@ public class HouseService {
     public House createHouse(House house) {
         if (findHouseById(house.getId()) != null)
             throw new IllegalArgumentException(String.format("House with id %s exists", house.getId()));
+        timeService.setTime(house);
         househapper.insert(house);
         return house;
     }
