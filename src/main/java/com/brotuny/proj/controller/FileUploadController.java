@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.stream.Collectors;
 
+import com.brotuny.proj.storege.AmazonClient;
 import com.brotuny.proj.storege.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -25,11 +26,12 @@ import javax.imageio.ImageIO;
 @RequestMapping("/api/image")
 public class FileUploadController {
 
-    private final FileSystemStorageService storageService;
+    //private final FileSystemStorageService storageService;
+    AmazonClient storageService;
 
     @Autowired
-    public FileUploadController(FileSystemStorageService storageService) {
-        this.storageService = storageService;
+    public FileUploadController(AmazonClient amazonClient) {
+        this.storageService = amazonClient;
     }
 
 
@@ -49,15 +51,4 @@ public class FileUploadController {
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
-
-/*    @GetMapping("/")
-    public String listUploadedFiles(Model model) throws IOException {
-
-        model.addAttribute("files", storageService.loadAll().map(
-                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                        "serveFile", path.getFileName().toString()).build().toString())
-                .collect(Collectors.toList()));
-
-        return "uploadForm";
-    }*/
 }
