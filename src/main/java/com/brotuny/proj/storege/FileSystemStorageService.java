@@ -14,7 +14,7 @@ public class FileSystemStorageService {
 
     @Autowired
     public FileSystemStorageService(/*StorageProperties properties*/) {
-        this.rootLocation = "C:\\Repos\\images\\";
+        this.rootLocation = "/opt/hahaton/hahaton/images/";
     }
 
     public String store(byte[] image) {

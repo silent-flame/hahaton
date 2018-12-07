@@ -26,11 +26,11 @@ import javax.imageio.ImageIO;
 @RequestMapping("/api/image")
 public class FileUploadController {
 
-    //private final FileSystemStorageService storageService;
-    AmazonClient storageService;
+    private final FileSystemStorageService storageService;
+    //AmazonClient storageService;
 
     @Autowired
-    public FileUploadController(AmazonClient amazonClient) {
+    public FileUploadController(FileSystemStorageService amazonClient) {
         this.storageService = amazonClient;
     }
 
